@@ -1,0 +1,47 @@
+{
+  "urls": [
+    {
+      "id": "1",
+      "short_url": "google",
+      "original_url": "https://www.google.com",
+      "author": "pk",
+      "click_count": 2,
+      "clicks": [
+        {
+          "ip": "198.162.0.1",
+          "location": "Hyderabad, India"
+        },
+        {
+          "ip": "198.162.0.1",
+          "location": "Delhi, India"
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "short_url": "youtube",
+      "original_url": "https://www.youtube.com",
+      "author": "pk",
+      "click_count": 1,
+      "clicks": [
+        {
+          "ip": "198.162.0.1",
+          "location": "Hyderabad, India"
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "short_url": "twitter",
+      "original_url": "https://www.x.com",
+      "author": "anonymous",
+      "click_count": 1,
+      "clicks": [
+        {
+          "ip": "198.162.0.1",
+          "location": "Delhi, India"
+        }
+      ]
+    }
+  ]
+}
