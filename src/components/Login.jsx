@@ -12,6 +12,8 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { styled } from "@mui/system";
+import axios from "axios";
+import { v4 as uuidv4 } from "uuid";
 
 const useStyles = () => ({
   dialog: {
@@ -65,6 +67,8 @@ const Login = ({ open, onClose, onLogin }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [value, setValue] = useState(0);
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const classes = useStyles();
 
   const handleChange = (event, newValue) => {
@@ -74,6 +78,26 @@ const Login = ({ open, onClose, onLogin }) => {
     setUsername("");
     setPassword("");
     onLogin(username, password);
+  };
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    setUsername("");
+    setPassword("");
+    setConfirmPassword("");
+    if (password === confirmPassword) {
+      try {
+        const response = await axios.post(
+          "https://e2zkwbdlg7.execute-api.ap-south-1.amazonaws.com/dev/users",
+          {
+            id: uuidv4(),
+            name: username,
+            password: password,
+          }
+        );
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    }
   };
   return (
     <React.Fragment>
@@ -128,29 +152,36 @@ const Login = ({ open, onClose, onLogin }) => {
             <CustomTabPanel value={value} index={1} style={classes.tabPanel}>
               <Box style={classes.tabPanelBox}>
                 <TextField
-                  id="outlined-basic"
+                  id="outlined-basic-regname"
                   label="User ID"
                   variant="outlined"
                   style={classes.textField}
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                 />
                 <TextField
-                  id="outlined-basic"
+                  id="outlined-basic-regpassword"
                   label="Password"
                   variant="outlined"
                   style={classes.textField}
                   type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
                 <TextField
-                  id="outlined-basic"
+                  id="outlined-basic-redconfirmpass"
                   label="Confirm Password"
                   variant="outlined"
                   style={classes.textField}
                   type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
                 />
                 <Button
                   variant="contained"
                   disableElevation
                   style={classes.button}
+                  onClick={handleRegister}
                 >
                   Register
                 </Button>

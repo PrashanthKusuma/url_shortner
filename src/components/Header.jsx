@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
@@ -14,6 +14,12 @@ const Header = ({ isLoggedIn, isAdmin, onLogin, onLogout }) => {
   const handleLoginClose = () => {
     setLoginOpen(false);
   };
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+    if (user) {
+      handleLoginClose();
+    }
+  });
 
   return (
     <AppBar position="fixed" sx={{ zIndex: 99 }}>

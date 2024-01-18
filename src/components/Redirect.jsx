@@ -12,13 +12,11 @@ const Redirect = () => {
       try {
         // Replace the URL with the actual path to your urls.json file
         const response = await axios.get(
-          "https://mocki.io/v1/7bdf3058-0204-486a-b7de-1be37cbf78a9"
+          "https://5f57e55439.execute-api.ap-south-1.amazonaws.com/dev/urls"
         );
         const data = response.data;
-
-        const obj = data.urls.find(
-          (e) => `/${e.short_url}` === location.pathname
-        );
+        console.log(data);
+        const obj = data.find((e) => `/${e.short_url}` === location.pathname);
 
         if (obj !== undefined) {
           window.location.href = obj.original_url;

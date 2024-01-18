@@ -4,6 +4,8 @@ import { Paper, TextField, Button, IconButton, Snackbar } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import Login from "./Login";
 import { generateKey, copy, isValidUrl } from "./utils.js";
+import axios from "axios";
+import { v4 as uuid } from "uuid";
 
 const useStyles = makeStyles((theme) => ({
   formContainer: {
@@ -26,15 +28,30 @@ const Home = () => {
   const [shortenedUrl, setShortenedUrl] = useState("");
   const [actualUrl, setActualUrl] = useState("");
   const [isValid, setIsValid] = useState(false);
+  const [temp, setTemp] = useState();
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-
+    setTemp(generateKey());
     setIsValid(isValidUrl(originalUrl));
-
+    console.log("text", temp);
     if (isValidUrl(originalUrl)) {
-      setShortenedUrl(generateKey());
-      setActualUrl(originalUrl);
+      try {
+        setShortenedUrl(generateKey());
+        console.log("temp", shortenedUrl);
+        setActualUrl(originalUrl);
+        const response = await axios.post(
+          "https://5f57e55439.execute-api.ap-south-1.amazonaws.com/dev/urls",
+          {
+            id: uuid(),
+            short_url: shortenedUrl,
+            original_url: originalUrl,
+          }
+        );
+      } catch (error) {
+        console.error("Error:", error);
+      }
+
       setOriginalUrl("");
     } else {
       alert("Invalid URL");

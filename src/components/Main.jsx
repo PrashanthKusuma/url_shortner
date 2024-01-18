@@ -3,7 +3,7 @@ import Header from "./Header";
 import Home from "./Home";
 import User from "./User";
 import Admin from "./Admin";
-import data from "../data.json";
+import axios from "axios";
 
 export default function Main() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -14,29 +14,32 @@ export default function Main() {
     if (user) {
       const userData = JSON.parse(user);
       setIsLoggedIn(true);
-      const userFound = data.users.find(
-        (user) => user.username === userData.username
-      );
-      setIsAdmin(userFound.type === "admin");
+      setIsAdmin(userData.type === "admin");
     }
   }, []);
 
-  const handleLogin = (enteredUsername, enteredPassword) => {
-    const userFound = data.users.find(
-      (user) =>
-        user.username === enteredUsername && user.password === enteredPassword
-    );
-
-    if (userFound) {
-      localStorage.setItem(
-        "user",
-        JSON.stringify({ username: enteredUsername })
+  const handleLogin = async (enteredUsername, enteredPassword) => {
+    try {
+      // Make a POST request to your AWS Lambda login endpoint
+      const response = await axios.get(
+        "https://e2zkwbdlg7.execute-api.ap-south-1.amazonaws.com/dev/users"
       );
-      setIsLoggedIn(true);
-      setIsAdmin(userFound.type === "admin");
-    } else {
-      // Handle invalid credentials, e.g., show an error message
-      console.log("Invalid credentials");
+
+      // Handle the response from your AWS Lambda function
+      let userFound =
+        response && response.data.user.find((e) => e.name == enteredUsername);
+
+      if (userFound && userFound.password == enteredPassword) {
+        localStorage.setItem("user", JSON.stringify(userFound));
+        setIsLoggedIn(true);
+        setIsAdmin(userFound.type === "admin");
+        console.log("login success");
+      }
+
+      // Further actions, such as updating state or redirecting the user
+    } catch (error) {
+      // Handle errors, such as displaying an error message to the user
+      console.error("Login failed", error.message);
     }
   };
 
